@@ -34,6 +34,13 @@
         margin-bottom: 100px;
         background: white;
     }
+    table,th,td{
+	    border: 1px solid #000000;
+
+    }
+    table {
+    	
+    }
 </style>
 </head>
 <body>
@@ -44,8 +51,8 @@
         		<div>Address 관리</div>
         		<ol>
         			<li><a href="/sakila/address/country.html">Country 관리</a></li>
-        			<li><a href="">City 관리</a></li>
-        			<li><a href="">Address 관리</a></li>
+        			<li><a href="/sakila/address/city.html">City 관리</a></li>
+        			<li><a href="/sakila/address/address.html">Address 관리</a></li>
         		</ol>
         	</li>
         	<li><a href="">Customer 관리</a></li>
@@ -55,6 +62,124 @@
     </div>
     <div id="section">
         <h1>INDEX</h1>
+        <h2>sakila database table 정보</h2>
+        <table>
+        	<thead>
+	        	<tr>
+	        		<th>테이블 이름</th><th>행의 수</th>
+	        	</tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+        			<td>country</td>
+        			<td><span id="countryRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>city</td>
+        			<td><span id="cityRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>address</td>
+        			<td><span id="addressRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>customer</td>
+        			<td><span id="customerRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>staff</td>
+        			<td><span id="staffRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>store</td>
+        			<td><span id="storeRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>payment</td>
+        			<td><span id="payMentRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>rental</td>
+        			<td><span id="rentalRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>category</td>
+        			<td><span id="categoryRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>filmCategory</td>
+        			<td><span id="filmCategoryRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>film</td>
+        			<td><span id="filmRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>language</td>
+        			<td><span id="languageRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>actor</td>
+        			<td><span id="actorRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>filmActor</td>
+        			<td><span id="filmActorRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>inventory</td>
+        			<td><span id="inventoryRow"></span></td>
+        		</tr>
+        		<tr>
+        			<td>fileText</td>
+        			<td><span id="filmTextRow"></span></td>
+        		</tr>  		
+        	</tbody>
+        </table>
+        
     </div>
 </body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		// aside.html include
+		//$("#aside").load("/sakila/aside.html");
+		
+		/*
+		기본 양식
+		$.ajax({ 
+			url: "/rest/1/pages/245", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소 
+			data: { name: "홍길동" }, // HTTP 요청과 함께 서버로 보낼 데이터 
+			method: "GET", // HTTP 요청 메소드(GET, POST 등) 
+			dataType: "json" // 서버에서 보내줄 데이터의 타입 
+			})
+		*/
+		$.ajax({
+				url : "/sakila/indexController",
+				method : "POST",
+				success : function(json){
+					console.log(json);
+					$("#countryRow").text(json.countryRow); // .text(), val(), html()
+					$("#cityRow").text(json.cityRow);
+					$("#customerRow").text(json.customerRow);
+					$("#addressRow").text(json.addressRow);
+					
+					$("#payMentRow").text(json.payMentRow);
+					$("#rentalRow").text(json.rentalRow);
+					$("#staffRow").text(json.staffRow);
+					$("#storeRow").text(json.storeRow);
+					
+					$("#actorRow").text(json.actorRow);
+					$("#categoryRow").text(json.categoryRow);
+					$("#filmActorRow").text(json.filmActorRow);
+					$("#filmCategoryRow").text(json.filmCategoryRow);
+					$("#filmRow").text(json.filmRow);
+					$("#filmTextRow").text(json.filmTextRow);
+					$("#inventoryRow").text(json.inventoryRow);
+					$("#languageRow").text(json.languageRow);
+					
+				}
+		});
+	</script>
 </html>
+	
+
