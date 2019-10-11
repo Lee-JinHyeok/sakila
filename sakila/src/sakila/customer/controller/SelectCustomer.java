@@ -15,7 +15,7 @@ import sakila.customer.model.Customer;
 import sakila.customer.model.CustomerDao;
 
 
-@WebServlet("/address/selectCustomerList")
+@WebServlet("/customer/selectCustomerList")
 public class SelectCustomer extends HttpServlet {
 	private CustomerDao customerDao;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

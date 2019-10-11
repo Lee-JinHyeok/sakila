@@ -71,10 +71,11 @@ public String getFirstName() {
 @Override
 public String toString() {
 	return "Customer [customerId=" + customerId + ", store=" + store + ", firstName=" + firstName + ", lastName="
-			+ lastName + ", email=" + email + ", Address=" + Address + ", active=" + active + ", createDate="
+			+ lastName + ", email=" + email + ", address=" + Address + ", active=" + active + ", createDate="
 			+ createDate + ", lastUpdate=" + lastUpdate + "]";
 }
 
+   
    
 
 

@@ -102,7 +102,7 @@
 				<thead>
 					<tr>
 						<th>customer_id</th>
-						<!-- <th>store_id</th> -->
+						 <th>store_id</th> 
 						<th>first_name</th>
 						<th>last_name</th>
 						<th>email</th>
@@ -127,6 +127,7 @@
 	
 	// city insert하기
 	$("#addCustomer").click(function(){
+
 		//paging
 		let currentPage = 1;
 		
@@ -147,28 +148,23 @@
 				"lastName" : $("#lastName").val(),
 				"emailName" : $("#emailName").val()},
 				
-			success : function(){
-				currentPage = 1;
-				//버튼값 입력 성공 후 데이터를 불러오기 위해
-				$("#list").empty();
-				/* $.ajax({
-					url : "/sakila/address/selectCityList",
-					method : "post",
-					data : {"currentPage" : currentPage},
-					success : function(json){ //json -> 자바스크립트의 객체로 변경							
-					console.log(json);
-					for(let c of json){
-						let html = "<tr>";
-						html += "<td>"+c.cityId+"</td>";
-						html += "<td>"+c.city+"</td>";
-						html += "<td>"+c.country.countryId+"</td>";
-						html += "<td>"+c.country.country+"</td>";
-						html += "</tr>";
-						$("#list").append(html);
-						}							
-					}					
-				}); */
-			}
+			success : function(json){ //json -> 자바스크립트의 객체로 변경							
+				console.log(json);
+				for(let c of json){
+					let html = "<tr>";
+					html += "<td>"+c.customerId+"</td>";
+					html += "<td>"+c.store.storeId+"</td>";
+					html += "<td>"+c.firstName+"</td>";
+					html += "<td>"+c.lastName+"</td>";
+					html += "<td>"+c.email+"</td>";
+					html += "<td>"+c.Address.addressId+"</td>";
+					html += "<td>"+c.active+"</td>";
+					html += "<td>"+c.createDate+"</td>";
+					html += "<td>"+c.lastUpdate+"</td>";
+					html += "</tr>";
+					$("#list").append(html);
+					}							
+				}
 		});
 	});
 	
@@ -176,7 +172,7 @@
 	//기존의 리스트 불러오기
 	$("#list").empty();
 	$.ajax({
-		url : "/sakila/address/selectCustomerList",
+		url : "/sakila/customer/selectCustomerList",
 		method : "post",
 		data : {"currentPage" : currentPage},
 		success : function(json){ //json -> 자바스크립트의 객체로 변경							
@@ -184,7 +180,7 @@
 		for(let c of json){
 			let html = "<tr>";
 			html += "<td>"+c.customerId+"</td>";
-			//html += "<td>"+c.store.store_id+"</td>";
+			html += "<td>"+c.store.storeId+"</td>";
 			html += "<td>"+c.firstName+"</td>";
 			html += "<td>"+c.lastName+"</td>";
 			html += "<td>"+c.email+"</td>";
@@ -208,7 +204,7 @@
 		
 		$("#list").empty();
 		$.ajax({
-			url : "/sakila/address/selectCustomerList",
+			url : "/sakila/customer/selectCustomerList",
 			method : "post",
 			data : {"currentPage" : currentPage},
 			success : function(json){ //json -> 자바스크립트의 객체로 변경							
@@ -216,7 +212,7 @@
 			for(let c of json){
 				let html = "<tr>";
 				html += "<td>"+c.customerId+"</td>";
-				//html += "<td>"+c.store.store_id+"</td>";
+				html += "<td>"+c.store.storeId+"</td>";
 				html += "<td>"+c.firstName+"</td>";
 				html += "<td>"+c.lastName+"</td>";
 				html += "<td>"+c.email+"</td>";
@@ -236,7 +232,7 @@
 		//마지막 페이지 설정을 위해 db의 전체 사이즈 가져옴		
 		let count = 0;
 		$.ajax({
-			url : "/sakila/address/selectCustomerList",
+			url : "/sakila/customer/selectCustomerList",
 			method : "post",
 			async : false,	 //동기방식임 비동기식은 코드가 순서대로 실행되지 않음
 			success : function(json){
@@ -256,7 +252,7 @@
 		// 다음버튼 으로 db 전체 사이즈 계싼해 리스트 가져오기
 		$("#list").empty();
 		$.ajax({
-			url : "/sakila/address/selectCustomerList",
+			url : "/sakila/customer/selectCustomerList",
 			method : "post",
 			data : {"currentPage" : currentPage},
 			success : function(json){ //json -> 자바스크립트의 객체로 변경							
@@ -264,7 +260,7 @@
 			for(let c of json){
 				let html = "<tr>";
 				html += "<td>"+c.customerId+"</td>";
-				//html += "<td>"+c.store.store_id+"</td>";
+				html += "<td>"+c.store.storeId+"</td>";
 				html += "<td>"+c.firstName+"</td>";
 				html += "<td>"+c.lastName+"</td>";
 				html += "<td>"+c.email+"</td>";

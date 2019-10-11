@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sakila.address.model.Address;
+import sakila.business.model.Store;
 import sakila.db.DBHelper;
 
 public class CustomerDao {
@@ -37,8 +38,8 @@ public class CustomerDao {
 		
 		final int ROW_PER_PAGE = 10;//paging
 		int beginRow = (currentPage - 1)*ROW_PER_PAGE;
-		// + c.store_id,
-		String sql = "SELECT c.customer_id, c.first_name, c.last_name, c.email, c.address_id, c.active, c.create_date, c.last_update "
+		// + 
+		String sql = "SELECT c.customer_id, c.store_id, c.first_name, c.last_name, c.email, c.address_id, c.active, c.create_date, c.last_update "
 				+ "FROM address a INNER JOIN customer c "
 				+ "ON a.address_id = c.address_id "
 				+ "WHERE c.address_id "
@@ -53,7 +54,9 @@ public class CustomerDao {
 			while(rs.next()) {
 				Customer c = new Customer();
 				c.setAddress(new Address());
+				c.setStore(new Store());
 				c.setCustomerId(rs.getInt("c.customer_id"));
+				c.getStore().setStoreId(rs.getInt("c.store_id"));
 				c.setFirstName(rs.getString("c.first_name"));
 				c.setLastName(rs.getString("c.last_name"));
 				c.setEmail(rs.getString("c.email"));
