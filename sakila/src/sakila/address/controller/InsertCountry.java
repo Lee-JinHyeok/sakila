@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import sakila.address.model.CountryDao;
 import sakila.customer.model.Country;
 
@@ -24,5 +26,9 @@ public class InsertCountry extends HttpServlet {
 		c.setCountry(country);
 		countryDao.insertCountry(c);
 		
+		Gson gson = new Gson();
+		String jsonList = gson.toJson(c);
+		System.out.println(jsonList);
+		response.getWriter().write(jsonList);	
 	}
 }

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Address</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        position: relative;
+        overflow-y: auto;
+    }
+    
+    #aside {
+        width: 200px;
+        height: 3000px;
+        position: fixed;
+        background: orange;
+        overflow: hidden;
+        float: left;
+    }
+    
+    #section {
+        margin-left: 300px;
+        margin-right: 500px;
+        margin-bottom: 100px;
+        background: white;
+    }
+</style>
+</head>
+<body>
+    <div id="aside">
+        
+    </div>
+    
+    
+    <div id="section">
+        <h1>Address</h1>
+        <h2>add address</h2>
+	        <div>
+	        	<div>
+	        		<table>
+	        			<tr>
+	        				<td>
+	        					<!--  country list -->
+	        					<div>
+	        						<select size="10" id="countryList"></select>
+	        					</div>
+	        				</td>
+	        				<td>
+	        					<!--  city list -->
+	        					<div>
+	        						<select size="10" id="cityList"></select>
+	        					</div>
+	        				</td>
+	        				<td>               <hr>
+				              <!--  coutry_id: <input type="text" id="country" readonly><hr>
+				               city_id: <input type="text" id="city" readonly><hr> -->
+				               address: <input type="text" id="address" ><hr>
+				               address2: <input type="text" id="address2" ><hr>
+				               district: <input type="text" id="district" ><hr>
+				               postal_code: <input type="text" id="postalCode" ><hr>
+				               phone: <input type="text" id="phone" ><hr>
+				               <button type="button" id="addAddress"> 추가 </button><hr>
+	        				</td>
+	        			</tr>
+	        		</table>
+	        	</div>
+	       			
+
+	        </div>
+        
+        <h2>address list</h2>
+        <div>
+        	<table>
+					<thead>
+						<tr>
+							<th>address_id</th>
+							<th>address</th>
+							<th>address2</th>
+							<th>district</th>
+							<th>city_id</th>
+							<th>postal_code</th>
+							<th>phone</th>
+							<th>last_update</th>
+						</tr>
+					</thead>
+				<tbody id="list">
+					
+				</tbody>
+			</table>
+			<button type="button" id="preBtn">이전</button>
+			<button type="button" id="nextBtn">다음</button>
+        </div>
+    </div>
+</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		$("#aside").load("../aside.html");
+		$.ajax({ 
+			url : "/sakila/address/selectCountryListAll",
+			method : "post",
+			success : function(json){
+				$("#countryList").empty();
+				// jquery(json).each(function(index, item){});
+				$(json).each(function(index, item){
+					//<option value='1'> KOREA </option>
+					temp = "<option value='";
+					temp += item.countryId;
+					temp += "'>";
+					temp += item.country;
+					temp += "</option>";
+					$("#countryList").append(temp);
+				});
+			}
+		});
+		
+		$("#countryList").change(function(){//counntryList 값이 변경되면 이 함수를 실행 해 주세용.
+			$.ajax({
+				url : "/sakila/address/selectCityListByCountry",
+				method : "post",
+				data : {"countryId" : $("#countryList").val()},
+				success : function(json){
+					$("#cityList").empty();
+					// jquery(json).each(function(index, item){});
+					$(json).each(function(index, item){
+						//<option value='1'> KOREA </option>
+						temp = "<option value='";
+						temp += item.cityId;
+						temp += "'>";
+						temp += item.city;
+						temp += "</option>";
+						$("#cityList").append(temp);
+					});
+				}
+			});
+		});
+		
+		let currentPage = 1;
+		
+		// :::::::::::::::::::::::::::::::::::::::::: 복붙 :::::::::::::::::::::::::::::::::::::::::::::::
+		// city insert하기
+		$("#addAddress").click(function(){
+			//ajax요청 ,비동기 방식
+			$.ajax({ 
+				url	: "/sakila/address/insertAddress",
+				method : "post",
+				data : {"cityId" : $("#cityList").val(),
+					"address" : $("#address").val(),
+					"address2" : $("#address").val(),
+					"district" : $("#district").val(),
+					"postalCode" : $("#postalCode").val(),
+					"phone" : $("#phone").val()},
+				success : function(){
+					currentPage = 1;
+					//버튼값 입력 성공 후 데이터를 불러오기 위해
+					$("#list").empty();
+					$.ajax({
+						url : "/sakila/address/selectAddressList",
+						method : "post",
+						data : {"currentPage" : currentPage},
+						success : function(json){
+				         $(json).each(function(index, item){
+				            let html = "<tr>";
+				            html += "<td>"+item.addressId+"</td>";
+				            html += "<td>"+item.address+"</td>";
+				            html += "<td>"+item.address2+"</td>";
+				            html += "<td>"+item.city.cityId+"</td>";
+				            html += "<td>"+item.district+"</td>";
+				            html += "<td>"+item.postalCode+"</td>";
+				            html += "<td>"+item.phone+"</td>";
+				            html += "<td>"+item.lastUpdate+"</td>";
+				            html += "</tr>";
+				            $("#list").append(html);
+				         })
+				      }  					
+					}); 
+				}
+			});
+		});
+		  // 처음 페이지 열었을 때 address 목록 출력
+		   $.ajax({
+		      url: "/sakila/address/selectAddressList",
+		      method: "POST",
+		      data : { "currentPage" : currentPage},
+		      success : function(json){
+		         console.log(json);
+		         $(json).each(function(index, item){
+		            let html = "<tr>";
+		            html += "<td>"+item.addressId+"</td>";
+		            html += "<td>"+item.address+"</td>";
+		            html += "<td>"+item.address2+"</td>";
+		            html += "<td>"+item.city.cityId+"</td>";
+		            html += "<td>"+item.district+"</td>";
+		            html += "<td>"+item.postalCode+"</td>";
+		            html += "<td>"+item.phone+"</td>";
+		            html += "<td>"+item.lastUpdate+"</td>";
+		            html += "</tr>";
+		            $("#list").append(html);
+		         })            
+		      }                           
+		   });       
+		  
+		   //이전 버튼
+		   $("#preBtn").click(function(){
+		      if(currentPage === 1){
+		         alert(" 현재 1페이지 입니다. 더 이상 앞으로 갈 수 없습니다.");
+		         return;
+		      }
+		      currentPage -=1;
+		      console.log(currentPage);
+		      
+		      $("#list").empty();
+		      // 목록 출력
+		      $.ajax({
+		         url: "/sakila/address/selectAddressList",
+		         method: "POST",
+		         data : { currentPage : currentPage},
+		         success : function(json){
+		            console.log(json);
+		            $(json).each(function(index, item){
+		               let html = "<tr>";
+		               html += "<td>"+item.addressId+"</td>";
+		               html += "<td>"+item.address+"</td>";
+		               html += "<td>"+item.address2+"</td>";
+		               html += "<td>"+item.city.cityId+"</td>";
+		               html += "<td>"+item.district+"</td>";
+		               html += "<td>"+item.postalCode+"</td>";
+		               html += "<td>"+item.phone+"</td>";
+		               html += "<td>"+item.lastUpdate+"</td>";
+		               html += "</tr>";
+		               $("#list").append(html);
+		            })            
+		         }
+		      });      
+		   });
+		   
+		   // 다음 버튼
+		   $("#nextBtn").click(function(){
+		      let count = 0;
+		      $.ajax({
+		         url : "/sakila/address/selectAddressList",
+		         method : "POST",
+		         async : false,
+		         success : function(json){
+		            console.log(json);
+		            count = Number(json);
+		         }
+		      });
+		      
+		      let lastPage = Math.ceil(count / 10);
+		      if(currentPage == lastPage){
+		         alert(" 현재 마지막페이지 입니다. 더 이상 다음으로 갈 수 없습니다.");
+		         return;
+		      }
+		      
+		      currentPage +=1;
+		      console.log(currentPage);
+		      
+		      $("#list").empty();
+		      // 목록 출력
+		      $.ajax({
+		         url: "/sakila/address/selectAddressList",
+		         method: "POST",
+		         data : { currentPage : currentPage},
+		         success : function(json){
+		            console.log(json);
+		            $(json).each(function(index, item){
+		               let html = "<tr>";
+		               html += "<td>"+item.addressId+"</td>";
+		               html += "<td>"+item.address+"</td>";
+		               html += "<td>"+item.address2+"</td>";
+		               html += "<td>"+item.city.cityId+"</td>";
+		               html += "<td>"+item.district+"</td>";
+		               html += "<td>"+item.postalCode+"</td>";
+		               html += "<td>"+item.phone+"</td>";
+		               html += "<td>"+item.lastUpdate+"</td>";
+		               html += "</tr>";
+		               $("#list").append(html);
+		            })            
+		         }
+		      });      
+		   });
+
+	</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+

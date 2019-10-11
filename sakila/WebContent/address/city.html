@@ -42,21 +42,9 @@
 </head>
 <body>
     <div id="aside">
-        <h1>MENU</h1>
-        <ul>
-        	<li>
-        		<div>Address 관리</div>
-        		<ol>
-        			<li><a href="/sakila/address/country.html">Country 관리</a></li>
-        			<li><a href="/sakila/address/city.html">City 관리</a></li>
-        			<li><a href="#">Address 관리</a></li>
-        		</ol>
-        	</li>
-        	<li><a href="">Customer 관리</a></li>
-        	<li><a href="">Business 관리</a></li>
-        	<li><a href="">Inventory 관리</a></li>
-        </ul>
+ 
     </div>
+    
 	    <div id="section">
 	        	<h1>City 관리</h1>
 		<h2>City 입력</h2>
@@ -97,12 +85,16 @@
 				</tbody>
 			</table>
 		</div>
+
 		<button type="button" id="preBtn">이전</button>
 		<button type="button" id="nextBtn">다음</button>
     </div>
+    
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
+		$("#aside").load("../aside.html");
+	
 		//나라 선택할 수 있게 목록 보여주기
 		$.ajax({
 			url : "/sakila/address/selectCountryListAll",
@@ -139,7 +131,6 @@
 				data : {"city" : $("#city").val(),
 					"countryId" : $("#countryId").val()},
 				success : function(){
-					console.log("CITY INSERT success");
 					currentPage = 1;
 					//버튼값 입력 성공 후 데이터를 불러오기 위해
 					$("#list").empty();

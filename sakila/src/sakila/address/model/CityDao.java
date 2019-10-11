@@ -11,6 +11,33 @@ import sakila.customer.model.Country;
 import sakila.db.DBHelper;
 
 public class CityDao {
+	//address.html에서 country를 고르면 자동을 city목록이 나온다. 대충 이런 내용의 함수 
+	public List<City> selectCityListByCountry(int countryId){
+		List<City> list = new ArrayList<City>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT city_id, city FROM city WHERE country_id = ?";
+		try {
+			conn = DBHelper.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, countryId);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				City c = new City();
+				c.setCityId(rs.getInt("city_id"));
+				c.setCity(rs.getString("city"));
+				list.add(c);
+			}
+		}	catch(Exception e) {
+			e.printStackTrace();
+		}	finally {
+			DBHelper.close(rs, stmt, conn);
+		}
+		return list;
+	}
+	
 	public int selectCityCount() {
 		int count = 0;
 		Connection conn = null;
@@ -22,7 +49,6 @@ public class CityDao {
 			conn = DBHelper.getConnection();
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
-
 			if(rs.next()) {
 				count = rs.getInt("count(*)");
 			}

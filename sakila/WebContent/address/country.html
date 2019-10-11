@@ -38,21 +38,7 @@
 </head>
 <body>
     <div id="aside">
-        <h1>MENU</h1>
-        <ul>
-        	<li>
-        		<div>Address 관리</div>
-        		<ol>
-        			<li><a href="/sakila/address/country.html">Country 관리</a></li>
-        			<li><a href="/sakila/address/city.html">City 관리</a></li>
-        			<li><a href="/sakila/address/address.html">Address 관리</a></li>
-        		</ol>
-        	</li>
-
-        	<li><a href="">Customer 관리</a></li>
-        	<li><a href="">Business 관리</a></li>
-        	<li><a href="">Inventory 관리</a></li>
-        </ul>
+	
     </div>
 	    <div id="section">
 	        	<h1>Country 관리</h1>
@@ -82,6 +68,8 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script>
+	$("#aside").load("../aside.html");
+	
 		let currentPage = 1;
 		
 
@@ -187,7 +175,6 @@
 				method : "post",
 				data : {country : $("#country").val()},
 				success : function(){
-					console.log("success");
 					currentPage = 1;
 					//버튼값 입력 성공 후 데이터를 불러오기 위해
 					$("#list").empty();
@@ -196,7 +183,6 @@
 						method : "post",
 						data : {"currentPage" : currentPage},
 						success : function(json){ //json -> 자바스크립트의 객체로 변경							
-						console.log(json);
 						for(let i=0; i<json.length; i++){
 							let html = "<tr>";
 							html += "<td>"+json[i].countryId+"</td>";
