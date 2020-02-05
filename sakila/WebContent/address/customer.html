@@ -4,37 +4,7 @@
 <title>Customer</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    body {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background-position: 0 0;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-        position: relative;
-        overflow-y: auto;
-    }
-    
-    #aside {
-        width: 200px;
-        height: 3000px;
-        position: fixed;
-        background: orange;
-        overflow: hidden;
-        float: left;
-    }
-    
-    #section {
-        margin-left: 300px;
-        margin-right: 500px;
-        margin-bottom: 100px;
-        background: white;
-    }
-</style>
+<link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
     <div id="aside">
@@ -148,51 +118,16 @@
 				"lastName" : $("#lastName").val(),
 				"emailName" : $("#emailName").val()},
 				
-			success : function(json){ //json -> 자바스크립트의 객체로 변경							
-				console.log(json);
-				for(let c of json){
-					let html = "<tr>";
-					html += "<td>"+c.customerId+"</td>";
-					html += "<td>"+c.store.storeId+"</td>";
-					html += "<td>"+c.firstName+"</td>";
-					html += "<td>"+c.lastName+"</td>";
-					html += "<td>"+c.email+"</td>";
-					html += "<td>"+c.Address.addressId+"</td>";
-					html += "<td>"+c.active+"</td>";
-					html += "<td>"+c.createDate+"</td>";
-					html += "<td>"+c.lastUpdate+"</td>";
-					html += "</tr>";
-					$("#list").append(html);
-					}							
-				}
+			success : function(json){ //json -> 자바스크립트의 객체로 변경				
+				appendItem(currentPage);						
+			}
 		});
 	});
 	
 	currentPage = 1;
 	//기존의 리스트 불러오기
-	$("#list").empty();
-	$.ajax({
-		url : "/sakila/customer/selectCustomerList",
-		method : "post",
-		data : {"currentPage" : currentPage},
-		success : function(json){ //json -> 자바스크립트의 객체로 변경							
-		console.log(json);
-		for(let c of json){
-			let html = "<tr>";
-			html += "<td>"+c.customerId+"</td>";
-			html += "<td>"+c.store.storeId+"</td>";
-			html += "<td>"+c.firstName+"</td>";
-			html += "<td>"+c.lastName+"</td>";
-			html += "<td>"+c.email+"</td>";
-			html += "<td>"+c.Address.addressId+"</td>";
-			html += "<td>"+c.active+"</td>";
-			html += "<td>"+c.createDate+"</td>";
-			html += "<td>"+c.lastUpdate+"</td>";
-			html += "</tr>";
-			$("#list").append(html);
-			}							
-		}					
-	});
+	appendItem(currentPage);
+	
 	// 이전 버튼 누르기 해서 리스트 가져오기
 	$("#preBtn").click(function(){
 		if(currentPage === 1){
@@ -201,30 +136,7 @@
 		}
 		currentPage -= 1;
 		console.log(currentPage);
-		
-		$("#list").empty();
-		$.ajax({
-			url : "/sakila/customer/selectCustomerList",
-			method : "post",
-			data : {"currentPage" : currentPage},
-			success : function(json){ //json -> 자바스크립트의 객체로 변경							
-			console.log(json);
-			for(let c of json){
-				let html = "<tr>";
-				html += "<td>"+c.customerId+"</td>";
-				html += "<td>"+c.store.storeId+"</td>";
-				html += "<td>"+c.firstName+"</td>";
-				html += "<td>"+c.lastName+"</td>";
-				html += "<td>"+c.email+"</td>";
-				html += "<td>"+c.Address.addressId+"</td>";
-				html += "<td>"+c.active+"</td>";
-				html += "<td>"+c.createDate+"</td>";
-				html += "<td>"+c.lastUpdate+"</td>";
-				html += "</tr>";
-				$("#list").append(html);
-				}							
-			}				
-		});
+		appendItem(currentPage);
 	});
 	
 	//다음 버튼 누르기 
@@ -250,44 +162,8 @@
 		currentPage += 1;
 		console.log(currentPage);
 		// 다음버튼 으로 db 전체 사이즈 계싼해 리스트 가져오기
-		$("#list").empty();
-		$.ajax({
-			url : "/sakila/customer/selectCustomerList",
-			method : "post",
-			data : {"currentPage" : currentPage},
-			success : function(json){ //json -> 자바스크립트의 객체로 변경							
-			console.log(json);
-			for(let c of json){
-				let html = "<tr>";
-				html += "<td>"+c.customerId+"</td>";
-				html += "<td>"+c.store.storeId+"</td>";
-				html += "<td>"+c.firstName+"</td>";
-				html += "<td>"+c.lastName+"</td>";
-				html += "<td>"+c.email+"</td>";
-				html += "<td>"+c.Address.addressId+"</td>";
-				html += "<td>"+c.active+"</td>";
-				html += "<td>"+c.createDate+"</td>";
-				html += "<td>"+c.lastUpdate+"</td>";
-				html += "</tr>";
-				$("#list").append(html);
-				}							
-			}					
-		});
+		appendItem(currentPage);
 	});
-	
-	
-	
-	//city를 고르면 cityID값이 들어간다.
-	$("#cityList").change(function(){
-		$("#cityId").val($("#cityList").val());
-		
-	});
-	//country를 고르면 COTUNRYiD값이 들어간다
-	$("#countryList").change(function(){
-		$("#countryId").val($("#countryList").val());
-		
-	});
-	
 	
 	$.ajax({ 
 		url : "/sakila/address/selectCountryListAll",
@@ -305,6 +181,10 @@
 				$("#countryList").append(temp);
 			});
 		}
+	});
+	//city를 고르면 cityID값이 들어간다.
+	$("#cityList").change(function(){
+		$("#cityId").val($("#cityList").val());
 	});
 	
 	$("#countryList").change(function(){//counntryList 값이 변경되면 이 함수를 실행 해 주세용.
@@ -327,6 +207,35 @@
 			}
 		});
 	});
+	//country를 고르면 COTUNRYiD값이 들어간다
+	$("#countryList").change(function(){
+		$("#countryId").val($("#countryList").val());
+	});
+function appendItem(currentPage){
+	$("#list").empty();
+	$.ajax({
+		url : "/sakila/customer/selectCustomerList",
+		method : "post",
+		data : {"currentPage" : currentPage},
+		success : function(json){ //json -> 자바스크립트의 객체로 변경							
+		console.log(json);
+		for(let c of json){
+			let html = "<tr>";
+			html += "<td>"+c.customerId+"</td>";
+			html += "<td>"+c.store.storeId+"</td>";
+			html += "<td>"+c.firstName+"</td>";
+			html += "<td>"+c.lastName+"</td>";
+			html += "<td>"+c.email+"</td>";
+			html += "<td>"+c.Address.addressId+"</td>";
+			html += "<td>"+c.active+"</td>";
+			html += "<td>"+c.createDate+"</td>";
+			html += "<td>"+c.lastUpdate+"</td>";
+			html += "</tr>";
+			$("#list").append(html);
+			}							
+		}					
+	});
+}
 </script>
 </html>
 

@@ -4,47 +4,11 @@
 <title>sakila index</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    body {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background-position: 0 0;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-        position: relative;
-        overflow-y: auto;
-    }
-    
-    #aside {
-        width: 200px;
-        height: 3000px;
-        position: fixed;
-        background: orange;
-        overflow: hidden;
-        float: left;
-    }
-    
-    #section {
-        margin-left: 300px;
-        margin-right: 500px;
-        margin-bottom: 100px;
-        background: white;
-    }
-    .dan{
-    	float : left;
-    }
-    
-</style>
+<link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
     <div id="aside">
- 
     </div>
-    
 	    <div id="section">
 	        	<h1>City 관리</h1>
 		<h2>City 입력</h2>
@@ -133,24 +97,7 @@
 				success : function(){
 					currentPage = 1;
 					//버튼값 입력 성공 후 데이터를 불러오기 위해
-					$("#list").empty();
-					$.ajax({
-						url : "/sakila/address/selectCityList",
-						method : "post",
-						data : {"currentPage" : currentPage},
-						success : function(json){ //json -> 자바스크립트의 객체로 변경							
-						console.log(json);
-						for(let c of json){
-							let html = "<tr>";
-							html += "<td>"+c.cityId+"</td>";
-							html += "<td>"+c.city+"</td>";
-							html += "<td>"+c.country.countryId+"</td>";
-							html += "<td>"+c.country.country+"</td>";
-							html += "</tr>";
-							$("#list").append(html);
-							}							
-						}					
-					});
+					appendItem(currentPage);
 				}
 			});
 		});
@@ -158,24 +105,7 @@
 		//paging
 		let currentPage = 1;
 		//기존의 리스트 불러오기
-		$("#list").empty();
-		$.ajax({
-			url : "/sakila/address/selectCityList",
-			method : "post",
-			data : {"currentPage" : currentPage},
-			success : function(json){ //json -> 자바스크립트의 객체로 변경							
-			console.log(json);
-			for(let c of json){
-				let html = "<tr>";
-				html += "<td>"+c.cityId+"</td>";
-				html += "<td>"+c.city+"</td>";
-				html += "<td>"+c.country.countryId+"</td>";
-				html += "<td>"+c.country.country+"</td>";
-				html += "</tr>";
-				$("#list").append(html);
-				}							
-			}					
-		});
+		appendItem(currentPage);
 		// 이전 버튼 누르기 해서 리스트 가져오기
 		$("#preBtn").click(function(){
 			if(currentPage === 1){
@@ -185,24 +115,7 @@
 			currentPage -= 1;
 			console.log(currentPage);
 			
-			$("#list").empty();
-			$.ajax({
-				url : "/sakila/address/selectCityList",
-				method : "post",
-				data : {"currentPage" : currentPage},
-				success : function(json){ //json -> 자바스크립트의 객체로 변경							
-				console.log(json);
-				for(let c of json){
-					let html = "<tr>";
-					html += "<td>"+c.cityId+"</td>";
-					html += "<td>"+c.city+"</td>";
-					html += "<td>"+c.country.countryId+"</td>";
-					html += "<td>"+c.country.country+"</td>";
-					html += "</tr>";
-					$("#list").append(html);
-					}							
-				}				
-			});
+			appendItem(currentPage);
 		});
 		
 		//다음 버튼 누르기 
@@ -210,7 +123,7 @@
 			//마지막 페이지 설정을 위해 db의 전체 사이즈 가져옴		
 			let count = 0;
 			$.ajax({
-				url : "/sakila/address/selectCountryCount",
+				url : "/sakila/address/selectCityCount",
 				method : "post",
 				async : false,	 //동기방식임 비동기식은 코드가 순서대로 실행되지 않음
 				success : function(json){
@@ -228,24 +141,28 @@
 			currentPage += 1;
 			console.log(currentPage);
 			// 다음버튼 으로 db 전체 사이즈 계싼해 리스트 가져오기
-			$("#list").empty();
-			$.ajax({
-				url : "/sakila/address/selectCityList",
-				method : "post",
-				data : {"currentPage" : currentPage},
-				success : function(json){ //json -> 자바스크립트의 객체로 변경							
-				console.log(json);
-				for(let c of json){
-					let html = "<tr>";
-					html += "<td>"+c.cityId+"</td>";
-					html += "<td>"+c.city+"</td>";
-					html += "<td>"+c.country.countryId+"</td>";
-					html += "<td>"+c.country.country+"</td>";
-					html += "</tr>";
-					$("#list").append(html);
-					}							
-				}					
-			});
+			appendItem(currentPage);
 		});
+		
+function appendItem(currentPage){
+	$("#list").empty();
+	$.ajax({
+		url : "/sakila/address/selectCityList",
+		method : "post",
+		data : {"currentPage" : currentPage},
+		success : function(json){ //json -> 자바스크립트의 객체로 변경							
+		console.log(json);
+		for(let c of json){
+			let html = "<tr>";
+			html += "<td>"+c.cityId+"</td>";
+			html += "<td>"+c.city+"</td>";
+			html += "<td>"+c.country.countryId+"</td>";
+			html += "<td>"+c.country.country+"</td>";
+			html += "</tr>";
+			$("#list").append(html);
+			}							
+		}					
+	});
+}
 </script>
 </html>

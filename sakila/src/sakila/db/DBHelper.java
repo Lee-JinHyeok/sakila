@@ -7,9 +7,9 @@ public class DBHelper {
 			
 		Class.forName("org.mariadb.jdbc.Driver");
 		//호스팅 db
-		Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/j5539538","j5539538","J1200");
+		//Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/j5539538","j5539538","J1200");
 		//호스트 db
-		//Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/sakila", "root", "java1234");
+		Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/j5539", "root", "java1234");
 		return conn;
 	}
 	public static void close(ResultSet rs, Statement stmt, Connection conn) {
